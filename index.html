@@ -41,6 +41,26 @@
             min-height: 100vh;
         }
 
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
         header {
             background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
             border-bottom: 1px solid var(--border);
@@ -126,6 +146,7 @@
             justify-content: space-between;
             align-items: center;
             user-select: none;
+            position: relative;
         }
 
         .character-list li:active {
@@ -145,12 +166,35 @@
         }
 
         .character-list li.dragging {
-            opacity: 0.5;
+            opacity: 0.6;
             background-color: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .character-list li.drop-target::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 1px;
+        }
+
+        .character-list li.drop-target-bottom::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 1px;
         }
 
         .delete-btn {
-            background-color: #cc3333;
+            background-color: #8b5a5a;
             color: white;
             border: none;
             padding: 4px 8px;
@@ -166,7 +210,7 @@
         }
 
         .delete-btn:hover {
-            background-color: #aa0000;
+            background-color: #a67070;
         }
 
         .add-char-btn {
@@ -252,668 +296,3 @@
             color: var(--accent);
             letter-spacing: 1.5px;
         }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .info-field {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .field-label {
-            font-size: 0.8em;
-            color: var(--accent);
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .field-content {
-            color: var(--text-primary);
-            font-size: 0.95em;
-            line-height: 1.6;
-            flex-grow: 1;
-            cursor: text;
-        }
-
-        .edit-mode .field-content {
-            cursor: auto;
-        }
-
-        .edit-mode .field-content input,
-        .edit-mode .field-content textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            font-family: 'Cinzel', serif;
-            border-radius: 4px;
-            font-size: 0.95em;
-        }
-
-        .edit-mode .field-content textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .abilities-list {
-            list-style: none;
-        }
-
-        .abilities-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-primary);
-        }
-
-        .abilities-list li:last-child {
-            border-bottom: none;
-        }
-
-        .abilities-list li::before {
-            content: "▪ ";
-            color: var(--accent);
-            margin-right: 8px;
-        }
-
-        .backstory-section {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            line-height: 1.8;
-            color: var(--text-primary);
-        }
-
-        .edit-mode .backstory-section textarea {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
-            border: 1px solid var(--border);
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            font-family: 'Cinzel', serif;
-            border-radius: 4px;
-        }
-
-        .settings-icon-container {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 95;
-        }
-
-        .settings-icon {
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .settings-icon:hover {
-            transform: rotate(30deg);
-        }
-
-        .settings-menu {
-            position: fixed;
-            top: 75px;
-            right: 30px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            z-index: 96;
-            display: none;
-            min-width: 180px;
-            box-shadow: var(--card-shadow);
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .settings-menu.active {
-            display: block;
-        }
-
-        .settings-option {
-            padding: 12px;
-            margin: 5px 0;
-            border: 1px solid var(--border);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9em;
-        }
-
-        .settings-option:hover {
-            background-color: var(--bg-secondary);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 400px;
-            box-shadow: var(--card-shadow);
-            text-align: center;
-        }
-
-        .modal-content h2 {
-            color: var(--accent);
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .modal-input {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 1px solid var(--border);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Cinzel', serif;
-            border-radius: 6px;
-            font-size: 1em;
-        }
-
-        .modal-button {
-            padding: 12px 30px;
-            margin: 10px;
-            border: 1px solid var(--border);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            cursor: pointer;
-            border-radius: 6px;
-            font-family: 'Cinzel', serif;
-            transition: all 0.3s;
-            font-size: 1em;
-        }
-
-        .modal-button:hover {
-            background-color: var(--accent);
-            color: var(--bg-primary);
-            border-color: var(--accent);
-        }
-
-        .modal-button.cancel {
-            background-color: #cc3333;
-            border-color: #cc3333;
-            color: white;
-        }
-
-        .modal-button.cancel:hover {
-            background-color: #aa0000;
-            border-color: #aa0000;
-        }
-
-        .character-species-icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            opacity: 0.9;
-        }
-
-        .name-field {
-            grid-column: 1 / -1;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-                flex-direction: row;
-                flex-wrap: wrap;
-                padding-bottom: 20px;
-            }
-
-            .sidebar-title {
-                width: 100%;
-            }
-
-            .search-container {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-
-            .character-list {
-                width: 100%;
-                flex-grow: 0;
-            }
-
-            .character-list li {
-                margin-right: 5px;
-                margin-bottom: 5px;
-            }
-
-            .add-char-btn {
-                margin-top: 0;
-                width: 100%;
-            }
-
-            header {
-                margin-left: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .character-slide {
-                margin: 10px auto;
-                padding: 20px;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            header h1 {
-                font-size: 1.8em;
-            }
-
-            .settings-icon-container {
-                top: 20px;
-                right: 20px;
-            }
-
-            .settings-menu {
-                top: 65px;
-                right: 20px;
-            }
-        }
-    </style>
-    <script>
-        let characters = [];
-        let currentCharacter = null;
-        let isEditMode = false;
-        let darkMode = true;
-        let draggedElement = null;
-
-        function getLoremIpsum(length = 'short') {
-            const shortLorem = "Lorem ipsum dolor sit amet";
-            const mediumLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.";
-            const longLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-            
-            if (length === 'medium') return mediumLorem;
-            if (length === 'long') return longLorem;
-            return shortLorem;
-        }
-
-        function getSpeciesColor(species) {
-            const colors = {
-                'Human': '#d4a574',
-                'Wolf Hybrid': '#9b8b7e',
-                'Fox Hybrid': '#d4915d',
-                'Dragon Hybrid': '#c9a884',
-                'Dog Hybrid': '#a87f3d',
-                'Cat Hybrid': '#c9a574',
-                'Moth Hybrid': '#a89fb0',
-                'Harpy Hybrid': '#c9a574',
-                'Angel': '#d4c5b9',
-                'Fallen Angel': '#8b7355',
-                'Demon': '#8b5a5a',
-                'Vampire': '#7a6a7a',
-                'Werewolf': '#9b7a6b',
-                'Zombie': '#8a9a7b',
-                'Naga': '#b39a74'
-            };
-            return colors[species] || '#d4a574';
-        }
-
-        function getSpeciesSVG(species) {
-            const color = getSpeciesColor(species);
-            const svgs = {
-                'Human': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="30" r="20" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 50 Q 40 60 30 70" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 50 Q 60 60 70 70" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 50 L 50 85" stroke="${color}" stroke-width="2"/></svg>`,
-                'Wolf Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 30 20 L 25 10 L 35 15 M 70 20 L 75 10 L 65 15" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="40" r="25" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 65 Q 40 75 30 85" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 65 Q 60 75 70 85" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Fox Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 25 15 L 20 5 L 30 10 M 75 15 L 80 5 L 70 10" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="45" r="22" fill="none" stroke="${color}" stroke-width="2"/><circle cx="50" cy="45" r="8" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M 40 60 Q 35 70 30 80" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Dragon Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 20 30 L 15 15 L 25 25" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="20" fill="none" stroke="${color}" stroke-width="2"/><path d="M 35 50 Q 30 55 28 65" stroke="${color}" stroke-width="2" fill="none"/><path d="M 65 50 Q 70 55 72 65" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 70 L 50 85" stroke="${color}" stroke-width="2"/></svg>`,
-                'Dog Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 35 20 L 32 8 L 40 15 M 65 20 L 68 8 L 60 15" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="40" r="22" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 62 Q 45 72 40 82" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 62 Q 55 72 60 82" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Cat Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 30 15 L 25 5 L 35 12 M 70 15 L 75 5 L 65 12" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="42" r="20" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 62 L 50 80" stroke="${color}" stroke-width="2"/><path d="M 48 80 Q 50 85 52 80" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Moth Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 30 30 Q 25 15 30 10 Q 35 15 30 30" stroke="${color}" stroke-width="2" fill="none"/><path d="M 70 30 Q 75 15 70 10 Q 65 15 70 30" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="45" r="18" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 63 L 50 85" stroke="${color}" stroke-width="2"/></svg>`,
-                'Harpy Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="30" r="15" fill="none" stroke="${color}" stroke-width="2"/><path d="M 35 45 Q 30 55 25 65" stroke="${color}" stroke-width="2" fill="none"/><path d="M 65 45 Q 70 55 75 65" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 45 L 50 70" stroke="${color}" stroke-width="2"/></svg>`,
-                'Angel': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="35" r="18" fill="none" stroke="${color}" stroke-width="2"/><path d="M 20 45 Q 50 20 80 45" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 53 L 50 80" stroke="${color}" stroke-width="2"/><path d="M 40 60 L 60 60" stroke="${color}" stroke-width="2"/></svg>`,
-                'Fallen Angel': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="35" r="18" fill="none" stroke="${color}" stroke-width="2"/><path d="M 20 45 Q 50 20 80 45" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 53 L 50 85" stroke="${color}" stroke-width="2"/><path d="M 45 70 Q 50 75 55 70" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Demon': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 35 20 L 30 5 L 38 15 M 65 20 L 70 5 L 62 15" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="42" r="22" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 64 Q 45 75 40 85" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 64 Q 55 75 60 85" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Vampire': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="38" r="20" fill="none" stroke="${color}" stroke-width="2"/><path d="M 40 55 L 35 70" stroke="${color}" stroke-width="2" fill="none"/><path d="M 60 55 L 65 70" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 58 L 50 75" stroke="${color}" stroke-width="2"/><circle cx="45" cy="35" r="2.5" fill="${color}"/><circle cx="55" cy="35" r="2.5" fill="${color}"/></svg>`,
-                'Werewolf': `<svg viewBox="0 0 100 100" class="character-species-icon"><path d="M 30 25 L 25 10 L 35 20 M 70 25 L 75 10 L 65 20" stroke="${color}" stroke-width="2" fill="none"/><circle cx="50" cy="45" r="23" fill="none" stroke="${color}" stroke-width="2"/><path d="M 50 68 Q 45 78 40 88" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 68 Q 55 78 60 88" stroke="${color}" stroke-width="2" fill="none"/></svg>`,
-                'Zombie': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="40" r="22" fill="none" stroke="${color}" stroke-width="2"/><circle cx="45" cy="38" r="3" fill="${color}"/><circle cx="55" cy="38" r="3" fill="${color}"/><path d="M 50 48 L 50 75" stroke="${color}" stroke-width="2"/><path d="M 40 70 L 60 70" stroke="${color}" stroke-width="1.5"/></svg>`,
-                'Naga': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="30" r="18" fill="none" stroke="${color}" stroke-width="2"/><path d="M 40 48 Q 35 60 32 75" stroke="${color}" stroke-width="2" fill="none"/><path d="M 60 48 Q 65 60 68 75" stroke="${color}" stroke-width="2" fill="none"/><path d="M 50 48 L 50 85" stroke="${color}" stroke-width="2.5"/></svg>`
-            };
-            return svgs[species] || '';
-        }
-
-        function getSettingsGearSVG() {
-            return `<svg viewBox="0 0 24 24" class="settings-icon" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
-            </svg>`;
-        }
-
-        function loadCharacters() {
-            const stored = localStorage.getItem('characters');
-            if (stored) {
-                characters = JSON.parse(stored);
-            } else {
-                characters = [
-                    { name: 'Human', info: { name: 'Human', pronouns: getLoremIpsum('short'), age: '25', dob: getLoremIpsum('short'), species: 'Human', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Wolf Hybrid', info: { name: 'Wolf Hybrid', pronouns: getLoremIpsum('short'), age: '28', dob: getLoremIpsum('short'), species: 'Wolf Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Fox Hybrid', info: { name: 'Fox Hybrid', pronouns: getLoremIpsum('short'), age: '22', dob: getLoremIpsum('short'), species: 'Fox Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Dragon Hybrid', info: { name: 'Dragon Hybrid', pronouns: getLoremIpsum('short'), age: '150', dob: getLoremIpsum('short'), species: 'Dragon Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Dog Hybrid', info: { name: 'Dog Hybrid', pronouns: getLoremIpsum('short'), age: '19', dob: getLoremIpsum('short'), species: 'Dog Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Cat Hybrid', info: { name: 'Cat Hybrid', pronouns: getLoremIpsum('short'), age: '24', dob: getLoremIpsum('short'), species: 'Cat Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Moth Hybrid', info: { name: 'Moth Hybrid', pronouns: getLoremIpsum('short'), age: '31', dob: getLoremIpsum('short'), species: 'Moth Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Harpy Hybrid', info: { name: 'Harpy Hybrid', pronouns: getLoremIpsum('short'), age: '27', dob: getLoremIpsum('short'), species: 'Harpy Hybrid', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Angel', info: { name: 'Angel', pronouns: getLoremIpsum('short'), age: '1000', dob: getLoremIpsum('short'), species: 'Angel', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Fallen Angel', info: { name: 'Fallen Angel', pronouns: getLoremIpsum('short'), age: '800', dob: getLoremIpsum('short'), species: 'Fallen Angel', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Demon', info: { name: 'Demon', pronouns: getLoremIpsum('short'), age: '2000', dob: getLoremIpsum('short'), species: 'Demon', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Vampire', info: { name: 'Vampire', pronouns: getLoremIpsum('short'), age: '500', dob: getLoremIpsum('short'), species: 'Vampire', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Werewolf', info: { name: 'Werewolf', pronouns: getLoremIpsum('short'), age: '45', dob: getLoremIpsum('short'), species: 'Werewolf', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Zombie', info: { name: 'Zombie', pronouns: getLoremIpsum('short'), age: '100', dob: getLoremIpsum('short'), species: 'Zombie', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') },
-                    { name: 'Naga', info: { name: 'Naga', pronouns: getLoremIpsum('short'), age: '120', dob: getLoremIpsum('short'), species: 'Naga', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] }, backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') }
-                ];
-                saveCharacters();
-            }
-        }
-
-        function saveCharacters() {
-            localStorage.setItem('characters', JSON.stringify(characters));
-        }
-
-        function loadTheme() {
-            const saved = localStorage.getItem('darkMode');
-            darkMode = saved !== null ? JSON.parse(saved) : true;
-            applyTheme();
-        }
-
-        function applyTheme() {
-            if (!darkMode) {
-                document.body.classList.add('light-mode');
-            } else {
-                document.body.classList.remove('light-mode');
-            }
-            localStorage.setItem('darkMode', JSON.stringify(darkMode));
-        }
-
-        function toggleTheme() {
-            darkMode = !darkMode;
-            applyTheme();
-        }
-
-        function renderCharacterList(filter = '') {
-            const list = document.getElementById('characterList');
-            list.innerHTML = '';
-            const filteredCharacters = characters.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
-            filteredCharacters.forEach((character) => {
-                const li = document.createElement('li');
-                li.textContent = character.name;
-                li.draggable = isEditMode;
-                li.className = currentCharacter && currentCharacter.name === character.name ? 'active' : '';
-                li.dataset.index = characters.indexOf(character);
-                
-                li.onclick = () => {
-                    currentCharacter = character;
-                    renderCharacterList(filter);
-                    showInfo(character);
-                };
-
-                if (isEditMode) {
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.textContent = 'X';
-                    deleteBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        if (confirm(`Delete ${character.name}?`)) {
-                            characters = characters.filter(c => c.name !== character.name);
-                            saveCharacters();
-                            currentCharacter = null;
-                            renderCharacterList(filter);
-                            showWelcome();
-                        }
-                    };
-                    li.appendChild(deleteBtn);
-                }
-
-                li.addEventListener('dragstart', (e) => {
-                    draggedElement = li;
-                    li.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                });
-
-                li.addEventListener('dragend', () => {
-                    li.classList.remove('dragging');
-                    draggedElement = null;
-                });
-
-                li.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                });
-
-                li.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    if (draggedElement && draggedElement !== li) {
-                        const fromIndex = parseInt(draggedElement.dataset.index);
-                        const toIndex = parseInt(li.dataset.index);
-                        [characters[fromIndex], characters[toIndex]] = [characters[toIndex], characters[fromIndex]];
-                        saveCharacters();
-                        renderCharacterList(filter);
-                    }
-                });
-
-                list.appendChild(li);
-            });
-        }
-
-        function showInfo(character) {
-            const content = document.getElementById('mainContent');
-            content.innerHTML = `
-                <div class="character-slide ${isEditMode ? 'edit-mode' : ''}">
-                    ${getSpeciesSVG(character.info.species)}
-                    <h2 class="slide-title">
-                        ${isEditMode ? `<input type="text" value="${character.info.name}" onchange="updateCharacterField('${character.name}', 'info.name', this.value)">` : character.info.name}
-                    </h2>
-                    <div class="info-grid">
-                        <div class="info-field"><span class="field-label">Pronouns</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.pronouns}" onchange="updateCharacterField('${character.name}', 'info.pronouns', this.value)">` : character.info.pronouns}</div></div>
-                        <div class="info-field"><span class="field-label">Age</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.age}" onchange="updateCharacterField('${character.name}', 'info.age', this.value)">` : character.info.age}</div></div>
-                        <div class="info-field"><span class="field-label">Date of Birth</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.dob}" onchange="updateCharacterField('${character.name}', 'info.dob', this.value)">` : character.info.dob}</div></div>
-                        <div class="info-field"><span class="field-label">Species</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.species}" onchange="updateCharacterField('${character.name}', 'info.species', this.value)">` : character.info.species}</div></div>
-                        <div class="info-field name-field"><span class="field-label">Body Features</span><div class="field-content">${isEditMode ? `<textarea onchange="updateCharacterField('${character.name}', 'info.body', this.value.split('\\n'))">${character.info.body.join('\n')}</textarea>` : `<ul class="abilities-list">${character.info.body.map(b => `<li>${b}</li>`).join('')}</ul>`}</div></div>
-                        <div class="info-field name-field"><span class="field-label">Clothing</span><div class="field-content">${isEditMode ? `<textarea onchange="updateCharacterField('${character.name}', 'info.clothing', this.value.split('\\n'))">${character.info.clothing.join('\n')}</textarea>` : `<ul class="abilities-list">${character.info.clothing.map(c => `<li>${c}</li>`).join('')}</ul>`}</div></div>
-                        <div class="info-field name-field"><span class="field-label">Abilities</span><div class="field-content">${isEditMode ? `<textarea onchange="updateCharacterField('${character.name}', 'info.abilities', this.value)">${character.info.abilities}</textarea>` : character.info.abilities}</div></div>
-                        <div class="info-field name-field"><span class="field-label">Personality Traits</span><div class="field-content">${isEditMode ? `<textarea onchange="updateCharacterField('${character.name}', 'info.personality', this.value.split('\\n'))">${character.info.personality.join('\n')}</textarea>` : `<ul class="abilities-list">${character.info.personality.map(p => `<li>${p}</li>`).join('')}</ul>`}</div></div>
-                    </div>
-                    <button class="add-char-btn" onclick="showBackstory(currentCharacter)">Backstory</button>
-                </div>
-            `;
-        }
-
-        function showBackstory(character) {
-            const content = document.getElementById('mainContent');
-            content.innerHTML = `
-                <div class="character-slide ${isEditMode ? 'edit-mode' : ''}">
-                    ${getSpeciesSVG(character.info.species)}
-                    <h2 class="slide-title">${isEditMode ? `<input type="text" value="Backstory of ${character.info.name}" onchange="updateBackstoryTitle(this.value)">` : `Backstory of ${character.info.name}`}</h2>
-                    <div class="backstory-section">${isEditMode ? `<textarea onchange="updateCharacterField('${character.name}', 'backstory', this.value)">${character.backstory}</textarea>` : character.backstory.split('\n\n').map(p => `<p>${p}</p>`).join('')}</div>
-                    <button class="add-char-btn" onclick="showInfo(currentCharacter)">Back to Info</button>
-                </div>
-            `;
-        }
-
-        function showWelcome() {
-            const content = document.getElementById('mainContent');
-            content.innerHTML = `<div class="character-slide"><h2 class="slide-title">Welcome to Character Bios</h2><p style="text-align: center; font-size: 1.1em; line-height: 1.8; color: var(--text-secondary);">Select a character from the list to view their information and backstory.</p></div>`;
-        }
-
-        function updateCharacterField(charName, field, value) {
-            const character = characters.find(c => c.name === charName);
-            if (!character) return;
-            const fields = field.split('.');
-            let obj = character;
-            for (let i = 0; i < fields.length - 1; i++) {
-                obj = obj[fields[i]];
-            }
-            obj[fields[fields.length - 1]] = value;
-            saveCharacters();
-        }
-
-        function updateBackstoryTitle(newTitle) {
-            if (currentCharacter) saveCharacters();
-        }
-
-        function toggleSettingsMenu() {
-            const menu = document.getElementById('settingsMenu');
-            menu.classList.toggle('active');
-        }
-
-        function openPasswordModal() {
-            document.getElementById('passwordModal').classList.add('active');
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').classList.remove('active');
-        }
-
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === '12345') {
-                isEditMode = !isEditMode;
-                closePasswordModal();
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('settingsMenu').classList.remove('active');
-                if (currentCharacter) showInfo(currentCharacter);
-                renderCharacterList();
-            } else {
-                alert('Incorrect password!');
-                document.getElementById('passwordInput').value = '';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCharacters();
-            loadTheme();
-            renderCharacterList();
-            showWelcome();
-
-            document.getElementById('searchInput').addEventListener('keyup', (e) => {
-                renderCharacterList(e.target.value);
-            });
-
-            document.querySelector('.settings-icon-container').innerHTML = getSettingsGearSVG();
-            document.querySelector('.settings-icon').addEventListener('click', toggleSettingsMenu);
-
-            document.getElementById('themeToggle').addEventListener('click', () => {
-                toggleTheme();
-                toggleSettingsMenu();
-            });
-
-            document.getElementById('editToggle').addEventListener('click', openPasswordModal);
-
-            document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') checkPassword();
-            });
-
-            document.getElementById('submitPassword').addEventListener('click', checkPassword);
-            document.getElementById('cancelPassword').addEventListener('click', closePasswordModal);
-
-            document.getElementById('addCharBtn').addEventListener('click', () => {
-                const name = prompt('Enter character name:');
-                if (!name) return;
-                const newChar = {
-                    name: name,
-                    info: { name: name, pronouns: getLoremIpsum('short'), age: '20', dob: getLoremIpsum('short'), species: 'Human', body: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], clothing: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')], abilities: getLoremIpsum('medium'), personality: [getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short'), getLoremIpsum('short')] },
-                    backstory: getLoremIpsum('long') + '\n\n' + getLoremIpsum('long') + '\n\n' + getLoremIpsum('long')
-                };
-                characters.push(newChar);
-                saveCharacters();
-                renderCharacterList();
-            });
-
-            document.addEventListener('click', (e) => {
-                const settingsContainer = document.querySelector('.settings-icon-container');
-                if (!settingsContainer.contains(e.target)) {
-                    document.getElementById('settingsMenu').classList.remove('active');
-                }
-            });
-        });
-    </script>
-</head>
-<body>
-    <header>
-        <h1>Character Bios</h1>
-        <p>A comprehensive collection of character information and backstories</p>
-    </header>
-
-    <div class="sidebar">
-        <div class="sidebar-title">Characters</div>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search...">
-        </div>
-        <ul class="character-list" id="characterList"></ul>
-        <button class="add-char-btn" id="addCharBtn">Add Character</button>
-    </div>
-
-    <div class="main-content" id="mainContent"></div>
-
-    <div class="settings-icon-container" id="settingsIconContainer"></div>
-    <div class="settings-menu" id="settingsMenu">
-        <button class="settings-option" id="themeToggle">Toggle Theme</button>
-        <button class="settings-option" id="editToggle">Edit Mode</button>
-    </div>
-
-    <div class="modal" id="passwordModal">
-        <div class="modal-content">
-            <h2>Enter Password</h2>
-            <input type="password" id="passwordInput" placeholder="Password" autocomplete="off">
-            <button class="modal-button" id="submitPassword">Submit</button>
-            <button class="modal-button cancel" id="cancelPassword">Cancel</button>
-        </div>
-    </div>
-</body>
-</html>
