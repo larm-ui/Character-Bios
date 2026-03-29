@@ -473,4 +473,174 @@
                 'Dog Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="40" r="22" fill="none" stroke="var(--accent-gold)" stroke-width="2"/><path d="M 35 20 L 32 8 L 40 15 M 65 20 L 68 8 L 60 15" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
                 'Cat Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="42" r="20" fill="none" stroke="var(--accent-gold)" stroke-width="2"/><path d="M 30 15 L 25 5 L 35 12 M 70 15 L 75 5 L 65 12" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
                 'Moth Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="45" r="18" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
-                'Harpy Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="30" r="15" fill=
+                'Harpy Hybrid': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="30" r="15" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Angel': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="35" r="18" fill="none" stroke="var(--accent-gold)" stroke-width="2"/><path d="M 20 45 Q 50 20 80 45" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Fallen Angel': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="35" r="18" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Demon': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="42" r="22" fill="none" stroke="var(--accent-gold)" stroke-width="2"/><path d="M 35 20 L 30 5 L 38 15 M 65 20 L 70 5 L 62 15" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Vampire': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="38" r="20" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Werewolf': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="45" r="23" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Zombie': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="40" r="22" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`,
+                'Naga': `<svg viewBox="0 0 100 100" class="character-species-icon"><circle cx="50" cy="30" r="18" fill="none" stroke="var(--accent-gold)" stroke-width="2"/></svg>`
+            };
+            return svgs[species] || '';
+        }
+
+        function getSettingsGearSVG() {
+            return `<svg viewBox="0 0 24 24" class="settings-icon" fill="none" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v4m0 8v4M4.22 4.22l2.83 2.83m8.48 0l2.83-2.83M1 12h4m8 0h4M4.22 19.78l2.83-2.83m8.48 0l2.83 2.83"></path>
+            </svg>`;
+        }
+
+        function loadCharacters() {
+            const stored = localStorage.getItem('characters');
+            if (stored) {
+                characters = JSON.parse(stored);
+            } else {
+                const species = ['Human', 'Wolf Hybrid', 'Fox Hybrid', 'Dragon Hybrid', 'Dog Hybrid', 'Cat Hybrid', 'Moth Hybrid', 'Harpy Hybrid', 'Angel', 'Fallen Angel', 'Demon', 'Vampire', 'Werewolf', 'Zombie', 'Naga'];
+                characters = species.map(s => ({
+                    name: s,
+                    info: { name: s, pronouns: getLoremIpsum(), age: '25', dob: getLoremIpsum(), species: s, body: [getLoremIpsum(), getLoremIpsum(), getLoremIpsum()], clothing: [getLoremIpsum(), getLoremIpsum()], abilities: getLoremIpsum(), personality: [getLoremIpsum(), getLoremIpsum()] },
+                    backstory: getLoremIpsum() + '\n\n' + getLoremIpsum() + '\n\n' + getLoremIpsum()
+                }));
+                saveCharacters();
+            }
+        }
+
+        function saveCharacters() {
+            localStorage.setItem('characters', JSON.stringify(characters));
+        }
+
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('darkMode', JSON.stringify(darkMode));
+        }
+
+        function renderCharacterList(filter = '') {
+            const list = document.getElementById('characterList');
+            list.innerHTML = '';
+            characters.filter(c => c.name.toLowerCase().includes(filter)).forEach(c => {
+                const li = document.createElement('li');
+                li.textContent = c.info.name;
+                li.className = currentCharacter?.name === c.name ? 'active' : '';
+                li.draggable = isEditMode;
+                li.dataset.name = c.name;
+                li.onclick = () => { currentCharacter = c; renderCharacterList(filter); showInfo(c); };
+
+                if (isEditMode) {
+                    const del = document.createElement('button');
+                    del.className = 'delete-btn';
+                    del.textContent = 'X';
+                    del.onclick = (e) => { e.stopPropagation(); if (confirm(`Delete?`)) { characters = characters.filter(x => x.name !== c.name); saveCharacters(); currentCharacter = null; renderCharacterList(filter); } };
+                    li.appendChild(del);
+                }
+
+                li.addEventListener('dragstart', () => { draggedElement = li; li.classList.add('dragging'); });
+                li.addEventListener('dragend', () => { li.classList.remove('dragging'); document.querySelectorAll('.character-list li').forEach(x => x.classList.remove('drop-target')); });
+                li.addEventListener('dragover', (e) => { e.preventDefault(); if (draggedElement !== li) document.querySelectorAll('.character-list li').forEach(x => x.classList.remove('drop-target')); li.classList.add('drop-target'); });
+                li.addEventListener('drop', (e) => { e.preventDefault(); if (draggedElement && draggedElement !== li) { const from = characters.findIndex(x => x.name === draggedElement.dataset.name); const to = characters.findIndex(x => x.name === li.dataset.name); const char = characters[from]; characters.splice(from, 1); characters.splice(to, 0, char); saveCharacters(); renderCharacterList(filter); } });
+
+                list.appendChild(li);
+            });
+        }
+
+        function showInfo(character) {
+            document.getElementById('mainContent').innerHTML = `
+                <div class="character-slide ${isEditMode ? 'edit-mode' : ''}">
+                    ${getSpeciesSVG(character.info.species)}
+                    <h2 class="slide-title">${isEditMode ? `<input type="text" value="${character.info.name}" onchange="updateName('${character.name}', this.value)">` : character.info.name}</h2>
+                    <div class="info-grid">
+                        <div class="info-field"><span class="field-label">Pronouns</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.pronouns}" onchange="update('${character.name}', 'pronouns', this.value)">` : character.info.pronouns}</div></div>
+                        <div class="info-field"><span class="field-label">Age</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.age}" onchange="update('${character.name}', 'age', this.value)">` : character.info.age}</div></div>
+                        <div class="info-field"><span class="field-label">DOB</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.dob}" onchange="update('${character.name}', 'dob', this.value)">` : character.info.dob}</div></div>
+                        <div class="info-field"><span class="field-label">Species</span><div class="field-content">${isEditMode ? `<input type="text" value="${character.info.species}" onchange="update('${character.name}', 'species', this.value)">` : character.info.species}</div></div>
+                        <div class="info-field name-field"><span class="field-label">Body</span><div class="field-content">${isEditMode ? `<textarea onchange="update('${character.name}', 'body', this.value.split('\\n'))">${character.info.body.join('\n')}</textarea>` : `<ul class="abilities-list">${character.info.body.map(b => `<li>${b}</li>`).join('')}</ul>`}</div></div>
+                        <div class="info-field name-field"><span class="field-label">Clothing</span><div class="field-content">${isEditMode ? `<textarea onchange="update('${character.name}', 'clothing', this.value.split('\\n'))">${character.info.clothing.join('\n')}</textarea>` : `<ul class="abilities-list">${character.info.clothing.map(c => `<li>${c}</li>`).join('')}</ul>`}</div></div>
+                        <div class="info-field name-field"><span class="field-label">Abilities</span><div class="field-content">${isEditMode ? `<textarea onchange="update('${character.name}', 'abilities', this.value)">${character.info.abilities}</textarea>` : character.info.abilities}</div></div>
+                        <div class="info-field name-field"><span class="field-label">Personality</span><div class="field-content">${isEditMode ? `<textarea onchange="update('${character.name}', 'personality', this.value.split('\\n'))">${character.info.personality.join('\n')}</textarea>` : `<ul class="abilities-list">${character.info.personality.map(p => `<li>${p}</li>`).join('')}</ul>`}</div></div>
+                    </div>
+                    <button class="add-char-btn" onclick="showBackstory(currentCharacter)">Backstory</button>
+                </div>
+            `;
+        }
+
+        function showBackstory(character) {
+            document.getElementById('mainContent').innerHTML = `
+                <div class="character-slide ${isEditMode ? 'edit-mode' : ''}">
+                    ${getSpeciesSVG(character.info.species)}
+                    <h2 class="slide-title">${isEditMode ? `<input type="text" value="Backstory">` : `Backstory`}</h2>
+                    <div class="backstory-section">${isEditMode ? `<textarea onchange="update('${character.name}', 'backstory', this.value)">${character.backstory}</textarea>` : character.backstory.split('\n\n').map(p => `<p>${p}</p>`).join('')}</div>
+                    <button class="add-char-btn" onclick="showInfo(currentCharacter)">Back</button>
+                </div>
+            `;
+        }
+
+        function updateName(oldName, newName) {
+            const c = characters.find(x => x.name === oldName);
+            if (c) { c.name = newName; c.info.name = newName; saveCharacters(); renderCharacterList(); showInfo(c); }
+        }
+
+        function update(name, field, value) {
+            const c = characters.find(x => x.name === name);
+            if (c) { c.info[field] = value; saveCharacters(); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCharacters();
+            if (localStorage.getItem('darkMode') === 'false') document.body.classList.add('light-mode');
+            renderCharacterList();
+            document.getElementById('mainContent').innerHTML = `<div class="character-slide"><h2 class="slide-title">Welcome</h2></div>`;
+
+            document.getElementById('searchInput').addEventListener('keyup', (e) => renderCharacterList(e.target.value));
+            document.querySelector('.settings-icon-container').innerHTML = getSettingsGearSVG();
+            document.querySelector('.settings-icon').onclick = () => document.getElementById('settingsMenu').classList.toggle('active');
+            document.getElementById('themeToggle').onclick = () => { toggleTheme(); document.getElementById('settingsMenu').classList.remove('active'); };
+            document.getElementById('editToggle').onclick = () => { document.getElementById('passwordModal').classList.add('active'); setTimeout(() => { document.getElementById('passwordInput').focus(); }, 50); };
+            
+            document.getElementById('submitPassword').onclick = () => {
+                if (document.getElementById('passwordInput').value === '12345') {
+                    isEditMode = !isEditMode;
+                    document.getElementById('passwordModal').classList.remove('active');
+                    document.getElementById('passwordInput').value = '';
+                    if (currentCharacter) showInfo(currentCharacter);
+                    renderCharacterList();
+                } else alert('Wrong password');
+            };
+            
+            document.getElementById('cancelPassword').onclick = () => document.getElementById('passwordModal').classList.remove('active');
+            document.getElementById('passwordInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('submitPassword').click(); });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Character Bios</h1>
+        <p>A comprehensive collection</p>
+    </header>
+
+    <div class="sidebar">
+        <div class="sidebar-title">Characters</div>
+        <input type="text" id="searchInput" placeholder="Search...">
+        <ul class="character-list" id="characterList"></ul>
+        <button class="add-char-btn">Add Character</button>
+    </div>
+
+    <div class="main-content" id="mainContent"></div>
+
+    <div class="settings-icon-container" id="settingsIconContainer"></div>
+    <div class="settings-menu" id="settingsMenu">
+        <button class="settings-option" id="themeToggle">Toggle Theme</button>
+        <button class="settings-option" id="editToggle">Edit Mode</button>
+    </div>
+
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2>Enter Password</h2>
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button class="modal-button" id="submitPassword">Submit</button>
+            <button class="modal-button" id="cancelPassword">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>
