@@ -12,25 +12,32 @@
             box-sizing: border-box;
         }
 
+       /* Default Variables (Dark Mode) */
         :root {
-            --bg-primary: #2a2620;
-            --bg-secondary: #3a3530;
-            --text-primary: #e8e4dd;
-            --text-secondary: #b8b0a8;
-            --border: #5a5047;
-            --accent: #d4a574;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            --sidebar-width: 240px;
+            --bg-dark: #1a1410;
+            --bg-medium: #2d241f;
+            --bg-light: #3a3128;
+            --text-bright: #f5ead8;
+            --text-muted: #c4b5a0;
+            --accent-gold: #d4a574;
+            --accent-orange: #e8915d;
+            --label-orange: #ff9d47;
+            --field-black: #0f0d0a;
+            --border-brown: #5a4a3a;
         }
 
+        /* Light Mode Overrides - Increased Contrast */
         body.light-mode {
-            --bg-primary: #d4b896;
-            --bg-secondary: #c9a882;
-            --text-primary: #3a3020;
-            --text-secondary: #664d2a;
-            --border: #a87f3d;
-            --accent: #8b6f47;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --bg-dark: #eee2cc;      /* Lighter background */
+            --bg-medium: #dfd3ba;
+            --bg-light: #d4c5a9;
+            --text-bright: #2d241f;  /* Dark text for readability */
+            --text-muted: #5a4a3a;
+            --accent-gold: #8b6b45;
+            --accent-orange: #b3592d;
+            --label-orange: #a33b20;
+            --field-black: #ffffff;  /* White fields for contrast */
+            --border-brown: #a89878;
         }
 
         body {
@@ -715,9 +722,9 @@
             localStorage.setItem('darkMode', JSON.stringify(darkMode));
         }
 
-        function toggleTheme() {
-            darkMode = !darkMode;
-            applyTheme();
+    function toggleTheme() {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('darkMode', !isLight);
         }
 
         function renderCharacterList(filter = '') {
@@ -820,7 +827,12 @@
 
                 list.appendChild(li);
             });
-        }
+        }// Check saved theme preference
+            if (localStorage.getItem('darkMode') === 'false') {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
 
         function showInfo(character) {
             const content = document.getElementById('mainContent');
@@ -870,7 +882,17 @@
             for (let i = 0; i < fields.length - 1; i++) {
                 obj = obj[fields[i]];
             }
-            obj[fields[fields.length - 1]] = value;
+            obj[fiel// Check saved theme preference
+          // Check saved theme preference
+            if (localStorage.getItem('darkMode') === 'false') {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            } {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }ds[fields.length - 1]] = value;
             saveCharacters();
         }
 
